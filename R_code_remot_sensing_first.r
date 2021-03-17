@@ -14,7 +14,7 @@ install.packages("raster") #SB: sto installando il pacchetto raster che permette
 library(raster) #mi permette di richiamare ipacchetti scaricati in precedenza 
 
 ## 12/03/21 
- setwd("C:/lab"/") # r lavora per funzioni, devo comunicargli che cartella voglio utilizzare (lab precedentemente creata in C) per fare le operazioni, la funzione è set working directory
+ setwd("C:/lab/") # r lavora per funzioni, devo comunicargli che cartella voglio utilizzare (lab precedentemente creata in C) per fare le operazioni, la funzione è set working directory
  #devo mettere le virgolette perchè sto "uscendo" da R per attingere al disco C.
  library(raster)# brick è una funzione che compare dentro il pacchetto ratser per questo devo richiamarlo prima di utilizzarlo, solitamente si mette sepre all'inizio del codice
  p224r63_2011 <- brick("p224r63_2011_masked.grd") #la funzione brick permette di importare la serie di dati desiderata in formato raster da mettere sempre tra virgolette
