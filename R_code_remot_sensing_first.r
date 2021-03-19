@@ -49,6 +49,14 @@ cl <-colorRampPalette(c("black","grey","light grey")) (100)
 plot(p224r63_2011,col=cl)
 cls <- colorRampPalette(c("red","pink","orange","purple")) (200)
 plot (p224r63_2011,col=cls)
+dev.off()
+
+
+
+## 19/03/2021 ANALISI MULTITEMPORALE
+
+
+
 
 
 
