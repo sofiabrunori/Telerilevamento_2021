@@ -53,14 +53,70 @@ dev.off()
 
 
 
-## 19/03/2021 ANALISI MULTITEMPORALE
+## 24/03/2021 ANALISI MULTITEMPORALE
+library(raster) #SB: carico pacchetto raser
+#Carico il pacchetto richiesto: sp SB: in automatico mi carica anche il pachetto sp
+setwd("C:/lab/") #SB: devo carivcare anche la cartella dove sono localizzati i dati, !!!!! se uso il mec devo stare attenta e mettere setwd("/Users/name/Desktop/lab/")
+p224r63_2011 <- brick("p224r63_2011_masked.grd") #SB: prendo l'immagine masked già "tagliata"
+cls <- colorRampPalette(c("red","pink","orange","purple")) (200)
+plot (p224r63_2011,col=cls) #SB: plottiamo con anche il colore
+p224r63_2011 #SB: mi da delle info
+#class      : RasterBrick 
+#dimensions : 1499, 2967, 4447533, 7  (nrow, ncol, ncell, nlayers)
+#resolution : 30, 30  (x, y)
+#extent     : 579765, 668775, -522705, -477735  (xmin, xmax, ymin, ymax)
+#crs        : +proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0 
+#source     : C:/lab/p224r63_2011_masked.grd 
+#names      :       B1_sre,       B2_sre,       B3_sre,       B4_sre,       B5_sre,        B6_bt,       B7_sre 
+#min values : 0.000000e+00, 0.000000e+00, 0.000000e+00, 1.196277e-02, 4.116526e-03, 2.951000e+02, 0.000000e+00 
+#max values :    0.1249041,    0.2563655,    0.2591587,    0.5592193,    0.4894984,  305.2000000,    0.3692634 
 
+#SB: LE BANDE DELL'LANDNSAT
+# 1=blu
+#2=verde
+#3=rosso
+#4=infrarosso vicino
+#5=infrarosso medio
+#6=infrarosso termicola
+#proviamo a plottare la banda del blu il suo nome è B1_sre
+dev.off() #SB: ripulisce la finestra grafica
+#SB: il dollaro $ lega la banda blu
+#SB: esercizio di plot con nuova color ramp
+plot(p224r63_2011$B1_sre)
+clB<- colorRampPalette(c("black","blue","light blue","light grey")) (200)
+plot(p224r63_2011$B1_sre, col=clB)
+#SB: utilizziamo la funzione "par" che mi permette di blottare due immagini insieme cioè un multiframe lo indico mf e specifico sempre righe e colonne volendo
+par(mfrow=c(1,2)) #cioè una riga e due colonne nel mio array 
+par(mfrow=c(2,1)) #così lo faccio in due righe e una colonna da preferire perchè uso tutto lo spazio
+plot(p224r63_2011$B1_sre)
+plot(p224r63_2011$B2_sre)
+#SB: se faccio par mfcol metto nell'arrey prima il numero delle colonne
+par(mfcol=c(1,2))
+par(mfrow=c(4,1)) #SB: faccio plot delle 4 bande 
+plot(p224r63_2011$B1_sre)
+plot(p224r63_2011$B2_sre)
+plot(p224r63_2011$B3_sre)
+plot(p224r63_2011$B4_sre)
+par(mfrow=c(2,2))
+#SB: è visualizzato male occorre mettere  2 righe e due colonne
+plot(p224r63_2011$B1_sre)
+plot(p224r63_2011$B2_sre)
+plot(p224r63_2011$B3_sre)
+plot(p224r63_2011$B4_sre)
 
-
-
-
-
-
+clA<- colorRampPalette(c("orchid","cyan","hotpink","lemonchiffon","turquoise","peachpuff")) (200)
+plot(p224r63_2011$B1_sre, col=clA)
+#SB: colours() mi mostra a video tutti i colori che posso sfruttare
+#SB: esercizio con 4 colori
+par(mfrow=c(2,2))
+clB<- colorRampPalette(c("black","blue","light blue","light grey")) (200)
+plot(p224r63_2011$B1_sre, col=clB)
+clV<- colorRampPalette(c("black","green","light green","light grey")) (200)
+plot(p224r63_2011$B2_sre, col=clV)
+clR<- colorRampPalette(c("black","red","coral","yellow")) (200)
+plot(p224r63_2011$B3_sre, col=clR)
+clnir<- colorRampPalette(c("black","magenta","grey")) (200)
+plot(p224r63_2011$B4_sre, col=clnir)
 
 
 
