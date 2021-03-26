@@ -118,7 +118,7 @@ plot(p224r63_2011$B3_sre, col=clR)
 clnir<- colorRampPalette(c("black","magenta","grey")) (200)
 plot(p224r63_2011$B4_sre, col=clnir)
 
-
+##### 26/03/21
 
 
 
