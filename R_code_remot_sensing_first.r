@@ -118,8 +118,50 @@ plot(p224r63_2011$B3_sre, col=clR)
 clnir<- colorRampPalette(c("black","magenta","grey")) (200)
 plot(p224r63_2011$B4_sre, col=clnir)
 
-##### 26/03/21
+##### 26/03/21 VISUALIZZAZIONE DATI TRAMITE RGBPLOT
+library(raster) #SB: richiama pacchetto
+setwd("C:/lab/") #SB: setta la WD
+p224r63_2011 <- brick("p224r63_2011_masked.grd") #SB: ricarichiamo con brick i dati utili (meglio ricaricarli perchè se salvo w. space qualcosa va perso
+#SB: LE BANDE DELL'LANDNSAT
+# Bande Landsat
+# B1: blu
+# B2: verde
+# B3: rosso
+# B4: infrarosso vicino
+# B5: infrarosso medio
+# B6: infrarosso termico
+# B7: infrarosso medio
+#RGB= è lo schema fisso che il dispositivo usa per mostrare i colori (Red, Green, Blu), a seconda di come si mischiano ho tutti i colori
+# in pratica monto le bande nel punto giusto e formo un'immagine con i colori che vede l'occhio umano
+# la funzione è plotRGB(oggetto, r=3, g=2, b=1, stretch="lin")  stretch permette di migliorare la visualizzazione, funziona anche se scrivo 3, 2 ,1
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #immagine a colori naturali
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") # SB: così ho messo la banda dell'infrarosso
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #SB: cos' in viola vedo il suolo nudo
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+#SB: esercizio fare un multiframe con le immagini create in precedenza
+par(mfrow=c(2,2))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #immagine a colori naturali
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") # SB: così ho messo la banda dell'infrarosso
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #SB: cos' in viola vedo il suolo nudo
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+#SB: come salvare un pdf
+pdf("il_mio_primo_pdf_con_R.pdf")
+par(mfrow=c(2,2))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
+dev.off()
+# SB: lo stretch può anche non essere lineare ma ancora più esteso nei valori medi con Histogramstretch
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Hist")
+par(mfrow=c(2,1)) #SB: vedo la differenza tra i due tipi di stretch
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Hist")
+#EX: fare multiframe con colori naturali false e con hist
+par(mfrow=c(3,1))
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Hist")
 
-
-
+# SB: per analisi pca
+install.packages("RStoolbox")
 
