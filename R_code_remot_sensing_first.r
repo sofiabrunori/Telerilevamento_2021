@@ -140,7 +140,7 @@ plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #SB: cos' in viola vedo il s
 plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
 #SB: esercizio fare un multiframe con le immagini create in precedenza
 par(mfrow=c(2,2))
-plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #immagine a colori naturali
+plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin") #SB: immagine a colori naturali
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") # SB: così ho messo la banda dell'infrarosso
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin") #SB: cos' in viola vedo il suolo nudo
 plotRGB(p224r63_2011, r=3, g=2, b=4, stretch="Lin")
@@ -162,6 +162,44 @@ plotRGB(p224r63_2011, r=3, g=2, b=1, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=3, g=4, b=2, stretch="Hist")
 
-# SB: per analisi pca
+# SB: per analisi pca installare questo pacchetto
 install.packages("RStoolbox")
+library(RStoolbox) #SB: controlla vada bene perchè era già iinstallata la RStoolbox
+library(raster) #SB: richiama pacchetto
+setwd("C:/lab/") #SB: setta la WD
+p224r63_2011 <- brick("p224r63_2011_masked.grd") #SB: brik importa l'immagine intera
+p224r63_2011 #SB: guardiamo le caratteristiche del dato
+# SB: effettuiamo un analisi multitemporale, cioè confrontiamo lo stesso dato che viene da anni diversi.
+p224r63_1988 <- brick("p224r63_1988_masked.grd") #SB: importaimo il nuovo file
+p224r63_1988#SB: guardiamo le nuove info
+#class      : RasterBrick 
+#dimensions : 1499, 2967, 4447533, 7  (nrow, ncol, ncell, nlayers)
+#resolution : 30, 30  (x, y)
+#extent     : 579765, 668775, -522705, -477735  (xmin, xmax, ymin, ymax)
+#crs        : +proj=utm +zone=22 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0 
+#source     : C:/lab/p224r63_1988_masked.grd 
+#names      :       B1_sre,       B2_sre,       B3_sre,       B4_sre,       B5_sre,        B6_bt,       B7_sre 
+#min values : 4.070954e-03, 8.173777e-03, 4.615846e-03, 1.300000e-02, 4.567942e-03, 2.947000e+02, 0.000000e+00 
+#max values :   0.08496003,   0.17020000,   0.21908860,   0.54999932,   0.45184137, 305.20000000,   0.49681378 
+plot(p224r63_1988) #SB: primo plot
+plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin") #SB: la metto coi colori naturali
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")#SB: plot all'infrarosso
+par(mfrow=c(2,1)) #SB: così vedo le differenze
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+
+par(mfrow=c(2,2)) #SB: vediamo come cambia con streth hist è impo per i geologi perchè la riflettanza cambia con grain
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
+
+pdf("multitemp_R.pdf") #SB : salvataggio in pdf
+par(mfrow=c(2,2)) #SB: vediamo come cambia con streth hist è impo per i geologi perchè la riflettanza cambia con grain
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="hist")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="hist")
+dev.off()
+
 
