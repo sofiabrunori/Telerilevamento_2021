@@ -22,5 +22,5 @@ plot(temp1, col=colT, main="temperatura a gennaio") #SB: ho aggiunto con main il
 
 #SB: funzione aggregate permette di migliorare la visualizzazione, riduco il numero di pixel con un fattore x, in pratica raggruppa i pixel e fa la media
 #SB: ex fattore 10 (prende 100 pixel e li accorpa in 1 facendo la media) faccio un resampling per far pesare meno
-temp1agg<- aggregate (temp1, fact= 100) #SB: in questo caso ho raggruppato 1000 pixel
+temp1agg<- aggregate (temp1, fact= 100) #SB: in questo caso ho raggruppato 10000 pixel
 plot(temp1agg, col=colT, main="temperatura a gennaio, ricampionato" ) #SB: riplotto con nuovo titolo
