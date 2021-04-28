@@ -15,8 +15,8 @@ p224r63_2011
 #max values :    0.1249041,    0.2563655,    0.2591587,    0.5592193,    0.4894984,  305.2000000,    0.3692634 
 plot(p224r63_2011) #SB: plottare
 plot(p224r63_2011$B1_sre, p224r63_2011$B2_sre, col="red", pch=19, cex=2)#SB: mettiamo i valori della banda verde nel blu, pch= carattere del punto, cex= dimensione
-#SB: la funzione pairs mette in risalto le correlazioni tra tutte le variabili del dataset a coppie
+# SB: la funzione pairs mette in risalto le correlazioni tra tutte le variabili del dataset a coppie
 pairs(p224r63_2011) #SB mi mostra un grafico con tutte le correlazioni tra i dataset
                
-             
+library(RStoolbox)              
                
