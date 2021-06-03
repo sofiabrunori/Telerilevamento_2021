@@ -73,6 +73,32 @@ summary(sentpca$model)
 #Cumulative Proportion   0.6736804  0.9962557 1.000000000      1
 #SB: la prima componente spiega il 77,3% della variabilità
 
+#21/05
+setwd("C:/lab/") #SB: in testa tutte le librerie
+library(raster)
+library(RStoolbox)
+library(ggplot2)
+library(gridExtra)
+library(viridis)
+sentpca <- rasterPCA(sent) #SB: richiamo la pcaa della scorsa volta
+pc1 <- sentpca$map$PC1 #SB: lego la mappa alla pca alla banda 1 cioè la PC1
+#SB: applicare la funzione focal con la pc1
+pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100)
+plot(pc1sd5, col=clsd)
+#SB: utilizzo della funzione sources
+# pc1 <- sentpca$map$PC1         questo codice è salvato dentro virtuale e l'ho scaricato dentro lab, con source metto il risultato in r
+# pc1sd7 <- focal(pc1, w=matrix(1/49, nrow=7, ncol=7), fun=sd)
+# plot(pc1sd7)
+source("source_test_lezione.r.txt") #SB: va con le """ perchè sono fuori R
+#SB: scaricare le librarie viridis e richiamare ggplot e grid.extra ma in testa al codice
+#SB: scarichiamo anche il file source ggplot, .txt perchè non riesco a cambiare estensione ma funziona lo stesso
+source("source_ggplot.r.txt")
+
+
+
+
+
 
 
 
