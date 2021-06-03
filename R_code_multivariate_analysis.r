@@ -37,7 +37,7 @@ p224r63_2011res #SB: con fattore 10 la sisuluzione è passata da 30 a 300
 par(mfrow=c(2,1))
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="lin")
 plotRGB(p224r63_2011res, r=4, g=3, b=2, stretch="lin") #SB: confrontiamo a video i due casi 
-p224r63_2011res_pca <- rasterPCA(p224r63_2011res) #SB: rasterPCA crea una mappa e un modello per l'analisi
+p224r63_2011res_pca <- rasterPCA(p224r63_2011res) #SB: rasterPCA crea una mappa e un modello per l'analisi (principal component analisy)
 p224r63_2011res_pca
 #$call
 #rasterPCA(img = p224r63_2011res)
@@ -68,18 +68,30 @@ p224r63_2011res_pca
 #attr(,"class")
 #[1] "rasterPCA" "RStoolbox"
 #con la funzione summary vedo i dati meglio legat col $
-summary(p224r63_2011res_pca$model)
+summary(p224r63_2011res_pca$model) #SB: questa funzione mi mostra il sommario del modello che ho creato (infatti lego il dato con $ al modello)
 #Importance of components:
                         #  Comp.1      Comp.2       Comp.3       Comp.4
 #Standard deviation     1.2050671 0.046154880 0.0151509526 4.575220e-03
 #Proportion of Variance 0.9983595 0.001464535 0.0001578136 1.439092e-05
-#Cumulative Proportion  0.9983595 0.999824022 0.9999818357 9.999962e-01
+#Cumulative Proportion  0.9983595 0.999824022 0.9999818357 9.999962e-01     #SB: si legge così la prima banda spiega il 99,83% della variabilità, le componenti 1,2 e 3 spieano il 99,99%
                          #    Comp.5       Comp.6       Comp.7
 #Standard deviation     1.841357e-03 1.233375e-03 7.595368e-04
 #Proportion of Variance 2.330990e-06 1.045814e-06 3.966086e-07
 #Cumulative Proportion  9.999986e-01 9.999996e-01 1.000000e+00
 plot(p224r63_2011res_pca$map) #SB: per plottare va messo anche il legame con la mappa
 dev.off()
-plotRGB(p224r63_2011res_pca$map, r=1, g=2, b=3, stretch="lin") #SB: con plotRGB guardo i colori naturali
+plotRGB(p224r63_2011res_pca$map, r=1, g=2, b=3, stretch="lin") #SB: con plotRGB guardo i colori rgb
+
+
+
+
+
+
+
+
+
+
+
+
 
 
