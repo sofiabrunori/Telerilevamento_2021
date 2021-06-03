@@ -75,9 +75,18 @@ max values :     1.224745,   248.000000,   1.777827,     1.000000,     1.000000,
 vi2 <- spectralIndices(defor2, green = 3, red = 2, nir = 1)
 plot(vi2, col=cl) #SB: anche con il secondo oggetto
 
-
-
-
+#5/05
+install.packages("rasterdiv")
+library(rasterdiv)
+install.packages("rasterVis") #SB: era già stata installata
+library(rasterVis)
+setwd("C:/lab/")
+plot(copNDVI) #SB: mi mostra tutto l'NDVI del mondo preso da copernicus
+#SB: togliamo la parte del grafico che ha l'acqua cioè i pixel 253, 254 e 255, devono essere messi come NA (not assigned)
+#SB: la funzione reclassify
+copNDVI <- reclassify(copNDVI, cbind(253:255, NA))
+plot(copNDVI)
+levelplot(copNDVI) #SB: con levelplot 
 
 
 
