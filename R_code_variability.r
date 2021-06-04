@@ -94,9 +94,26 @@ source("source_test_lezione.r.txt") #SB: va con le """ perchè sono fuori R
 #SB: scaricare le librarie viridis e richiamare ggplot e grid.extra ma in testa al codice
 #SB: scarichiamo anche il file source ggplot, .txt perchè non riesco a cambiare estensione ma funziona lo stesso
 source("source_ggplot.r.txt")
-
-
-
+#SB: plottiamo tramite ggplot questi dati, la funz ggolot apre una nuova finestra
+p1 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis()  +
+ggtitle("Standard deviation of PC1 by viridis colour scale")   #SB: geom_raster (quello che voglio poi le aestetichs, questa mappa è il modo migliore per vedere delle discontinuità
+#SB: viridis mostra tutte le varie scale di colore visibili a tutti (anche per i daltonici e altro)
+# https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html , le palette sono:  “magma”, “plasma”, “inferno”, “civids”, “mako”, and “rocket” -, and a rainbow color map - “turbo”.
+p2 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "magma")  +                           #SB: argomento scale_fill_viridis
+ggtitle("Standard deviation of PC1 by magma colour scale")
+p3 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "mako")  +
+ggtitle("Standard deviation of PC1 by mako colour scale")
+#SB: ora mettiamole tutte insieme (viridis, magma e mako), mi serve grid.arrange
+#library(grid.extra) già messo in testa
+grid.arrange(p1, p2, p3, nrow = 1) 
+#SB: prima con source il prof aveva composto tutte le palette di viridis
+#SB: non mettere la ramp palette rainbow
 
 
 
