@@ -10,7 +10,10 @@
 # 6 CLASSIFICATION
 # 7 GGPLOT2
 # 8 VEGETATION INDICES
-# LAND COVER
+# 9 LAND COVER
+# 10 VARIABILITY
+# 11 FIRMA SPETTRALE
+# esercizio
 
 
 ##  1 REMOT SENSING (10/03/21)
@@ -753,10 +756,225 @@ grid.arrange(p1, p2, nrow=1)
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# 10 
+# 10 VARIABILITY 
 
+setwd("C:/lab/") #SB: in testa tutte le librerie
+library(raster)
+library(RStoolbox)
+library(ggplot2)
+library(gridExtra)
+install.packages("viridis")
+library(viridis)
+sent <- brick("sentinel.png") #SB: importare il dato
+sent #SB: vedere le info
+#class      : RasterBrick 
+#dimensions : 794, 798, 633612, 4  (nrow, ncol, ncell, nlayers)
+#resolution : 1, 1  (x, y)
+#extent     : 0, 798, 0, 794  (xmin, xmax, ymin, ymax)
+#crs        : NA 
+#source     : C:/lab/sentinel.png 
+#names      : sentinel.1, sentinel.2, sentinel.3, sentinel.4 
+#min values :          0,          0,          0,          0 
+#max values :        255,        255,        255,        255 
+plotRGB(sent) #SB: non importa specificare le bande perchè di default sono già corrette
+#SB: dobbiamo calcolare la variabilità (deviazione standard), alla fine ottengo una nuova mappa dove ogni pixel deriva dalla deviazione standard calcolata da una finestra mobile
+nir <- sent$sentinel.1 #SB: metto i nomi più semplici
+red <- sent$sentinel.2
+ndvi <- (nir-red) / (nir+red) #SB: calcolando l'indice ndvi ho unito insieme tutte le bande
+plot(ndvi)
+cl <- colorRampPalette(c('black','white','red','magenta','green'))(100) 
+plot(ndvi,col=cl)
+#SB: ora posso calcolare la dev. standard con la funzione focal
+ndvisd3 <- focal(ndvi, w=matrix(1/9, nrow=3, ncol=3), fun=sd) #SB: focal(oggetto, w=  dimensione finestra mobile , fun= deviaz. stand)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) # 
+plot(ndvisd3, col=clsd)
+#SB: calcoliamo anche la media
+ndvimean3 <- focal(ndvi, w=matrix(1/9, nrow=3, ncol=3), fun=mean)
+plot(ndvimean3, col=clsd)
+#SB: proviamo a cambiare anche la dimensione della finestra mobile
+ndvisd9 <- focal(ndvi, w=matrix(1/81, nrow=9, ncol=9), fun=sd)
+plot(ndvisd9, col=clsd)
+#SB: di solito 5 può andare bene
+ndvisd5 <- focal(ndvi, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100) # 
+plot(ndvisd5, col=clsd)
+#SB: esiste un altro modo per accorpare dei dati cioè la pca
+sentpca <- rasterPCA(sent) #SB: rasterPCA è la funzione che fa la pca sui raster
+plot(sentpca$map)  
+sentpca
+#$call
+#rasterPCA(img = sent)
+#$model
+#Call:
+#princomp(cor = spca, covmat = covMat[[1]])
+#Standard deviations:
+#  Comp.1   Comp.2   Comp.3   Comp.4 
+#77.33628 53.51455  5.76560  0.00000 
+#4  variables and  633612 observations.
 
+#$map
+#class      : RasterBrick 
+#dimensions : 794, 798, 633612, 4  (nrow, ncol, ncell, nlayers)
+#resolution : 1, 1  (x, y)
+#extent     : 0, 798, 0, 794  (xmin, xmax, ymin, ymax)
+#crs        : NA 
+#source     : memory
+#names      :       PC1,       PC2,       PC3,       PC4 
+#min values : -227.1124, -106.4863,  -74.6048,    0.0000 
+#max values : 133.48720, 155.87991,  51.56744,   0.00000 
+summary(sentpca$model)
+#Importance of components:
+ #                          Comp.1     Comp.2      Comp.3 Comp.4
+#Standard deviation     77.3362848 53.5145531 5.765599616      0
+#Proportion of Variance  0.6736804  0.3225753 0.003744348      0
+#Cumulative Proportion   0.6736804  0.9962557 1.000000000      1
+#SB: la prima componente spiega il 77,3% della variabilità
 
+#21/05
+setwd("C:/lab/") #SB: in testa tutte le librerie
+library(raster)
+library(RStoolbox)
+library(ggplot2)
+library(gridExtra)
+library(viridis)
+sentpca <- rasterPCA(sent) #SB: richiamo la pcaa della scorsa volta
+pc1 <- sentpca$map$PC1 #SB: lego la mappa alla pca alla banda 1 cioè la PC1
+#SB: applicare la funzione focal con la pc1
+pc1sd5 <- focal(pc1, w=matrix(1/25, nrow=5, ncol=5), fun=sd)
+clsd <- colorRampPalette(c('blue','green','pink','magenta','orange','brown','red','yellow'))(100)
+plot(pc1sd5, col=clsd)
+#SB: utilizzo della funzione sources
+# pc1 <- sentpca$map$PC1         questo codice è salvato dentro virtuale e l'ho scaricato dentro lab, con source metto il risultato in r
+# pc1sd7 <- focal(pc1, w=matrix(1/49, nrow=7, ncol=7), fun=sd)
+# plot(pc1sd7)
+source("source_test_lezione.r.txt") #SB: va con le """ perchè sono fuori R
+#SB: scaricare le librarie viridis e richiamare ggplot e grid.extra ma in testa al codice
+#SB: scarichiamo anche il file source ggplot, .txt perchè non riesco a cambiare estensione ma funziona lo stesso
+source("source_ggplot.r.txt")
+#SB: plottiamo tramite ggplot questi dati, la funz ggolot apre una nuova finestra
+p1 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis()  +
+ggtitle("Standard deviation of PC1 by viridis colour scale")   #SB: geom_raster (quello che voglio poi le aestetichs, questa mappa è il modo migliore per vedere delle discontinuità
+#SB: viridis mostra tutte le varie scale di colore visibili a tutti (anche per i daltonici e altro)
+# https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html , le palette sono:  “magma”, “plasma”, “inferno”, “civids”, “mako”, and “rocket” -, and a rainbow color map - “turbo”.
+p2 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "magma")  +                           #SB: argomento scale_fill_viridis
+ggtitle("Standard deviation of PC1 by magma colour scale")
+p3 <- ggplot() +
+geom_raster(pc1sd5, mapping = aes(x = x, y = y, fill = layer)) +
+scale_fill_viridis(option = "mako")  +
+ggtitle("Standard deviation of PC1 by mako colour scale")
+#SB: ora mettiamole tutte insieme (viridis, magma e mako), mi serve grid.arrange
+#library(grid.extra) già messo in testa
+grid.arrange(p1, p2, p3, nrow = 1) 
+#SB: prima con source il prof aveva composto tutte le palette di viridis
+#SB: non mettere la ramp palette rainbow
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#11 FIRMA SPETTRALE
+library(raster)
+library(ggplot2)
+library(rgdal)
+setwd("C:/lab/")
+#SB: il dataset defor è già stato scaricato in massato
+rgbStack <- brick("defor2.jpg")
+plotRGB(rgbStack, 1,2,3, stretch="Lin") #SB: plottiamo con le bande 
+plotRGB(rgbStack, 1,2,3, stretch="Hist") #SB: questa visualizzazione permette di accentuare le differenze
+#SB: la funzione click permette permette di vedere le firme spettrali tramitte un semplice click
+click(rgbStack, id=T, xy=T, cell=T, type="p", pch=16, col="green") #SB: pch è il carattere 
+#SB: cliccando nel punto mi da i valori 
+#     x     y   cell defor2.1 defor2.2 defor2.3
+#1 505.5 200.5 199115      193      185      172
+#SB: ora creiamo un dataframe, creo la tabella 
+band <- c(1,2,3)
+forest <- c(187,23,34)
+water <- c(39,87,125)
+spectrals <- data.frame(band,forest,water) #SB: così creo la tab
+ spectrals
+  #band forest water
+#1    1    187    39
+#2    2     23    87
+#3    3     34   125
+ggplot(spectrals, aes(x=band)) + 
+    geom_line(aes(y = forest), color = "green")+
+    geom_line(aes(y = water), color = "blue", linetype = "dotted")+
+    labs(x="wavelength", y="reflectance")
+# SB: questo è il plot con ggplot 2 con le relative aesthetics
+defor1 <- brick("defor1.jpg")
+plotRGB(defor1, r=1, g=2, b=3, stretch="lin")
+plotRGB(defor2, r=1, g=2, b=3, stretch="lin")
+click(defor2, id=T, xy=T, cell=T, type="p", pch=16, col="yellow")
+#SB: nuovo dataset
+band <- c(1,2,3)
+time1 <- c(223,11,33)
+time2 <- c(197,163,151)
+spectralst <- data.frame(band, time1, time2)
+
+#SB: sepctral signatures
+ggplot(spectrals, aes(x=band)) +
+ geom_line(aes(y=time1), color="red") +
+ geom_line(aes(y=time2), color="gray") +
+ labs(x="band",y="reflectance")
+ #SB: nuovo tentativo 
+band <- c(1,2,3)
+time1 <- c(223,11,33)
+time1p2 <- c(218,16,38)
+time2 <- c(197,163,151)
+time2p2 <- c(149,157,133)
+spectralst <- data.frame(band, time1, time2, time1p2, time2p2)
+ # plot the sepctral signatures
+ggplot(spectralst, aes(x=band)) +
+ geom_line(aes(y=time1), color="red") +
+ geom_line(aes(y=time1p2), color="red") +
+ geom_line(aes(y=time2), color="gray") +
+ geom_line(aes(y=time2p2), color="gray") +
+ labs(x="band",y="reflectance")
+ #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#11 ESERCIZIO 
+
+#SB: abbiamo scaricato i dati da virtuale e "dezippati" in una cartella sul disco C detta EN
+library(raster)
+library(ggplot2)
+library(rgdal)
+libary(RStoolbox)
+setwd("C:/lab/EN") # SB: ricordiamo che abbiamo fatto una cartella apposita "EN"
+#SB: per importare i dati ho diverse strae ma siccome serve solo una banda mi basta usare brick
+#SB: devo importare la prima immagine 
+EN01 <- brick("EN_0001.png")
+#SB: plottare la prima immagine con la mcl che ti piace 
+cl <- colorRampPalette(c("red","pink","orange","purple")) (200)
+plot <-(EN01,col=cl)
+#SB: importare l'ultima immagine 
+EN13 <- brick("EN_0013.png")
+plot <-(EN13,col=cl)
+#SB creare la mappa differenza 
+DEN <- EN13- EN01 #SB: stai attenta quando fai la diferenza a mettere il maggiore per primo se no ti trovi i valori negativi
+plot <-(DEN,col=cl)
+#SB: plottare tutto insieme
+par(mfrow=c(3,1)) #così lo faccio in due righe e una colonna da preferire perchè uso tutto lo spazio
+plot(EN01,col=cl)
+plot(EN13,col=cl)
+plot(DEN,col=cl)
+#SB: fare una lista con tutti i file
+rlist <- list.files(pattern="EN")
+import <- lapply(rlist,raster)
+EN <- stack(import)
+plot <-(EN,col=cl)
+#SB: fare un plot comprensivo di 1 e 13 
+par(mfrow=c(2,1))
+plot(EN$EN_001, col=cl)
+plot(EN$EN_013, col=cl)
+#SB: fare una pca
+ENpca  <- rasterPCA(EN)
+summary  <- (ENpca$model)
+plotRGB(ENpca$map, r=1, g=2, b=3 , stretch="lin")
+#SB: calcolare la variabilità sulla prima componente
+PC1sd  <- focal(ENpca$map$PC1, w=matrix(1/9, nrow=3, ncol=3), fun=sd) 
+plot(PC1sd, col=cl)
 
 
 
