@@ -95,15 +95,41 @@ grid.arrange(p1, nrow=1)
 
 ####################################################################################################################################################
 
+banda_1 <-raster("B1.TIF")
+banda_2 <-raster("B2.TIF")
+banda_3 <-raster("B3.TIF")
+banda_4 <-raster("B4.TIF")
+banda_5 <-raster("B5.TIF")
+banda_6 <-raster("B6.TIF")
+rlist <- list.files(pattern=".TIF")
+import <- lapply(rlist,raster)
+Bande <- stack(import)
+plot(Bande, main=" bande della zona analizzata in precedenza")
+plotRGB(Bande)
+plotRGB(Bande, 3, 2, 1, stretch="Lin")
+plot(Bande$B3, Bande$B2, Bande$B1)
+ plotRGB(Bande, r=4, g=3, b=2, stretch="Lin") 
+########################################################################################################################################################
+   
+#calcolo dvi
+dvi <- Bande$B5- Bande$B4
+plot(dvi)
+cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+plot(dvi, col=cl)
+#calcolo NDVI
+#SB:NDVI=(NIR-RED) / (NIR+RED)
+ndvi <- (Bande$B5- Bande$B4) / (Bande$B5+ Bande$B4)
+plot(ndvi, col=cl, zlim=c(0,1))
+
+vi<- spectralIndices(Bande, green = 3, red = 2, nir = 1)
+
+pairs(p224r63_2011) #SB: mi mostra la correlazione tra tutte le bande e anche il valore di Pearson
+p224r63_2011res <- aggregate(p224r63_2011, fact=10) #SB: meglio ricampionare l'immagine con aggregate (in pratica abbasso la risoluzione) per evitare che le funzioni dopo impieghino troppo tempo
+p224r63_2011res #SB: con fattore 10 la sisuluzione è passata da 30 a 300
 
 
 
-
-
-
-
-
-setwd("C:/lab/esame/")
+    setwd("C:/lab/esame/")
 
 library(raster)
 library(raster)
