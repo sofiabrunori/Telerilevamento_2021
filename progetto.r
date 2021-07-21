@@ -6,29 +6,95 @@ library(ncdf4)
 library(rgdal)
 library(RStoolbox)
 library(ggplot2)
-coastlines <- readOGR("ne_10m_coastline.shp")
-rlist=list.files(pattern="temp", full.names=T)
-list_temp =lapply(rlist, raster)
-land_t <- stack(list_temp)rlist=list.files(pattern="temp", full.names=T)
-list_temp =lapply(rlist, raster)
-land_t <- stack(list_temp)
-cl <- colorRampPalette(c('cyan', 'purple', 'red')) (300)
-plot(land_t,col=cl,main="T° dal 2012 al 2020", adj=0.5, zlim=c(0,5))
-plot(coastlines)
-t_2020 <- raster("temp_2020.nc")
-t_2012 <- raster("temp_2012.nc")
-difT <- t_2020-t_2012
-cldiff <- colorRampPalette(c('blue','orange','red'))(100)
-plot(difT, col=cldiff, main= "grafico differenza tra l'anno 2020 e 2012")
-plot(coastlines, add=T)
-
-t_2020 <- raster("temp_2020.nc")
-t_2012 <- raster("temp_2012.nc")
+pre<- brick("prima.jpg")
+post<- brick("dopo.jpg")
 par(mfrow=c(2,1))
-plot(t_2020, col=cl, main="temperatura 2020",zlim=c(0,5))
-plot(coastlines, add=T)
-plot(t_2012, col=cl, main="temperatura 2012",zlim=c(0,5))
-plot(coastlines, add=T)
+plotRGB(pre, main="situazione pre inondazione")
+plotRGB(post, main="situazione post inondazione")
+plot(pre$prima.1, main="situazione pre inondazione")
+plot(pre$prima.2)
+plot(pre$prima.3)
+plotRGB(pre)
+Rb<-  pre$prima.1
+Gb<-  pre$prima.2
+Bb<-  pre$prima.3
+RGBb <- stack(Rb,Gb,Bb)
+plotRGB(RGBb)
+Ra<-  post$dopo.1
+Ga<-  post$dopo.2
+Ba<-  post$dopo.3
+RGBa <- stack(Ra,Ga,Ba)
+DifR<- Ra - Rb
+DifG<- Ga - Gb
+DifB<- Ba - Bb
+RGBD <- stack(DifR,DifG,DifB)
+par(mfrow=c(3,1))
+cl <- colorRampPalette(c("blue","light blue","pink","red"))(100)
+plot(DifG, col=cl, main="differenza nella banda verde tra post ed pre alluvione")
+plot(DifR, col=cl, main="differenza nella banda verde tra post ed pre alluvione")
+plot(DifB, col=cl, main="differenza nella banda verde tra post ed pre alluvione")
+###############################################################################################
+preclass <- unsuperClass(pre, nClasses= 3)
+clclassp <- colorRampPalette(c("pink","green","blue"))(3)
+plot(preclass$map, col=clclassp, main= "situazione pre alluvione")
+postclass<- unsuperClass(post, nClasses= 3)
+clclassd <- colorRampPalette(c("pink","blue","green"))(3)
+plot(postclass$map, col=clclassd, main= "situazione post alluvione")
+par(mfrow=c(2,1))
+plot(preclass$map, col=clclassp, main= "situazione pre alluvione")
+plot(postclass$map, col=clclassd, main= "situazione post alluvione")
+############################################################################################
+freq(preclass$map)
+#    value  count
+#[1,]     1 147142
+#[2,]     2 259492
+#[3,]     3  25366
+freq(postclass$map)
+    value  count
+#[1,]     1 108539
+#[2,]     2  43419
+#[3,]     3 280042
+#############################################################################
+p1 <- ggRGB(pre, r=1, g=2, b=3, stretch="lin")
+p2 <- ggRGB(post, r=1, g=2, b=3, stretch="lin")
+grid.arrange(p1, p2, nrow=2) 
+#######################################################################
+spre <- 147142 + 259492 + 25366
+spost <- 108539 + 43419 + 280042
+proppre <- freq(preclass$map) / spre
+ #          value      count
+#[1,] 2.314815e-06 0.34060648
+#[2,] 4.629630e-06 0.60067593
+#[3,] 6.944444e-06 0.05871759
+
+proppost <- freq(postclass$map) / spost
+            value     count
+#[1,] 2.314815e-06 0.2512477
+#[2,] 4.629630e-06 0.1005069
+#[3,] 6.944444e-06 0.6482454
+
+cover <- c("suolo inondato","suolo")
+percent_pre <- c(5.9, 94.1) #SB: la seconda colonna sono le percentuali 92, vanno messi i dati che vengono dal tuo pc
+percent_post <- c(10, 90)
+percentages <- data.frame(cover, percent_pre, percent_post)
+percentages
+ #         cover percent_pre percent_post
+#1 suolo inondato         5.9           10
+#2          suolo        94.1           90
+ggplot(percentages, aes(x=cover, y=percent_pre, color=cover)) + geom_bar(stat="identity", fill="green")
+ggplot(percentages, aes(x=cover, y=percent_post, color=cover)) + geom_bar(stat="identity", fill="green")
+p1 <- ggplot(percentages, aes(x=cover, y=percent_pre, color=cover)) + geom_bar(stat="identity", fill="white")
+p2 <- ggplot(percentages, aes(x=cover, y=percent_post, color=cover)) + geom_bar(stat="identity", fill="white")
+grid.arrange(p1, p2, nrow=1)
+######################################################################################################################################################
+perc_inond <- c(5.9,10)
+cover <- c("suolo inondato_pre","suolo inondato_post")
+tab <- data.frame(perc_inond)
+p1 <- ggplot(tab, aes(x=cover, y=perc_inond, color=cover)) + geom_bar(stat="identity", fill="light blue")
+grid.arrange(p1, nrow=1)
+
+####################################################################################################################################################
+
 
 
 
@@ -38,6 +104,7 @@ plot(coastlines, add=T)
 
 
 setwd("C:/lab/esame/")
+
 library(raster)
 library(raster)
 library(ncdf4)
@@ -166,8 +233,8 @@ percentages
 #2          suolo       90.48        90.02
 ggplot(percentages, aes(x=cover, y=percent_pre, color=cover)) + geom_bar(stat="identity", fill="green")
 ggplot(percentages, aes(x=cover, y=percent_post, color=cover)) + geom_bar(stat="identity", fill="green")
-p1 <- ggplot(percentages, aes(x=cover, y=percent_pre, color=cover)) + geom_bar(stat="identity", fill="violet")
-p2 <- ggplot(percentages, aes(x=cover, y=percent_post, color=cover)) + geom_bar(stat="identity", fill="violet")
+p1 <- ggplot(percentages, aes(x=cover, y=percent_pre, color=cover)) + geom_bar(stat="identity", fill="white")
+p2 <- ggplot(percentages, aes(x=cover, y=percent_post, color=cover)) + geom_bar(stat="identity", fill="white")
 grid.arrange(p1, p2, nrow=1)
 perc_inond <- c(0.95,0.99)
 cover <- c("suolo inondato_pre","suolo inondato_post")
