@@ -121,12 +121,14 @@ plot(dvi, col=cl)
 ndvi <- (Bande$B5- Bande$B4) / (Bande$B5+ Bande$B4)
 plot(ndvi, col=cl, zlim=c(0,1))
 
-vi<- spectralIndices(Bande, green = 3, red = 2, nir = 1)
 
-pairs(p224r63_2011) #SB: mi mostra la correlazione tra tutte le bande e anche il valore di Pearson
-p224r63_2011res <- aggregate(p224r63_2011, fact=10) #SB: meglio ricampionare l'immagine con aggregate (in pratica abbasso la risoluzione) per evitare che le funzioni dopo impieghino troppo tempo
-p224r63_2011res #SB: con fattore 10 la sisuluzione è passata da 30 a 300
 
+pairs(Bande) #SB: mi mostra la correlazione tra tutte le bande e anche il valore di Pearson
+banderes <- aggregate(Bande, fact=10) #SB: meglio ricampionare l'immagine con aggregate (in pratica abbasso la risoluzione) per evitare che le funzioni dopo impieghino troppo tempo
+banderes #SB: con fattore 10 la sisuluzione è passata da 30 a 300
+ plotRGB(banderes, r=4, g=3, b=2, stretch="Lin") 
+vi<- spectralIndices(banderes, green = 3, red = 4, nir = 5) #???????
+plot(vi)
 
 
     setwd("C:/lab/esame/")
