@@ -95,33 +95,48 @@ grid.arrange(p1, nrow=1)
 
 ####################################################################################################################################################
 
-banda_1 <-raster("B1.TIF")
-banda_2 <-raster("B2.TIF")
-banda_3 <-raster("B3.TIF")
-banda_4 <-raster("B4.TIF")
-banda_5 <-raster("B5.TIF")
-banda_6 <-raster("B6.TIF")
-rlist <- list.files(pattern=".TIF")
+
+banda_1 <-raster("SR_B1.TIF")
+banda_2 <-raster("SR_B2.TIF")
+banda_3 <-raster("SR_B3.TIF")
+banda_4 <-raster("SR_B4.TIF")
+banda_5 <-raster("SR_B5.TIF")
+banda_6 <-raster("SR_B6.TIF")
+banda_7 <-raster("SR_B7.TIF")
+rlist <- list.files(pattern="SR_B")
 import <- lapply(rlist,raster)
 Bande <- stack(import)
-plot(Bande, main=" bande della zona analizzata in precedenza")
-plotRGB(Bande)
-plotRGB(Bande, 3, 2, 1, stretch="Lin")
-plot(Bande$B3, Bande$B2, Bande$B1)
- plotRGB(Bande, r=4, g=3, b=2, stretch="Lin") 
+pdf(Tutte_le_bande)
+plot(Bande, main="bande della zona analizzata in precedenza")
+q()
+plotRGB(Bande, r=4, g=3, b=2, stretch="Lin")
+pdf("Bande.pdf")
+par(mfrow=c(2,2))
+clB<- colorRampPalette(c("black","blue","light blue","light grey")) (200)
+clV<- colorRampPalette(c("black","green","light green","light grey")) (200)
+clR<- colorRampPalette(c("black","red","coral","yellow")) (200)
+clNIR<- colorRampPalette(c("black","cyan","hotpink")) (200)
+plot(Bande$SR_B2, col=clB, main="Banda del blu")
+plot(Bande$SR_B3, col=clV,  main="Banda del verde")
+plot(Bande$SR_B4, col=clR,  main="Banda del rosso")
+plot(Bande$SR_B5, col=clNIR, main="Banda del vicino-infrarosso")
+q()
+
 ########################################################################################################################################################
    
 #calcolo dvi
-dvi <- Bande$B5- Bande$B4
-plot(dvi)
-cl <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+dvi <- Bande$SR_B5- Bande$SR_B4
+cldvi <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
+plot(dvi, col=cldvi, main="Calcolo DVI tramite la sottrazione della banda 4 alla 5")
+clndvi <- colorRampPalette(c('darkblue','lightbue','lillac','hotpink'))(100)
 plot(dvi, col=cl)
 #calcolo NDVI
 #SB:NDVI=(NIR-RED) / (NIR+RED)
-ndvi <- (Bande$B5- Bande$B4) / (Bande$B5+ Bande$B4)
-plot(ndvi, col=cl, zlim=c(0,1))
+ndvi <- dvi / (Bande$SR_B5+ Bande$SR_B4)
+clndvi <- colorRampPalette(c('darkblue','lightblue','violet','hotpink'))(100)
+plot(ndvi, col=clndvi, zlim=c(0,1),main="Calcolo NDVI (DVI normalizzato))
 
-
+#######################################################################################################################################################
 
 pairs(Bande) #SB: mi mostra la correlazione tra tutte le bande e anche il valore di Pearson
 banderes <- aggregate(Bande, fact=10) #SB: meglio ricampionare l'immagine con aggregate (in pratica abbasso la risoluzione) per evitare che le funzioni dopo impieghino troppo tempo
@@ -129,7 +144,7 @@ banderes #SB: con fattore 10 la sisuluzione è passata da 30 a 300
  plotRGB(banderes, r=4, g=3, b=2, stretch="Lin") 
 vi<- spectralIndices(banderes, green = 3, red = 4, nir = 5) #???????
 plot(vi)
-
+#############################################################################################################
 
     setwd("C:/lab/esame/")
 
@@ -269,4 +284,33 @@ cover <- c("suolo inondato_pre","suolo inondato_post")
 tab <- data.frame(perc_inond)
 p1 <- ggplot(tab, aes(x=cover, y=perc_inond, color=cover)) + geom_bar(stat="identity", fill="light blue")
 grid.arrange(p1, nrow=1)
+plot (p224r63_2011),col=cls)
+
+
+banda_1 <-raster("SR_B1.TIF")
+banda_2 <-raster("SR_B2.TIF")
+banda_3 <-raster("SR_B3.TIF")
+banda_4 <-raster("SR_B4.TIF")
+banda_5 <-raster("SR_B5.TIF")
+banda_6 <-raster("SR_B6.TIF")
+banda_7 <-raster("SR_B7.TIF")
+rlist <- list.files(pattern="SR_B")
+import <- lapply(rlist,raster)
+Bande <- stack(import)
+plot(Bande, main=" bande della zona analizzata in precedenza")
+plotRGB(Bande, r=3, g=2, b=1, stretch="Lin")
+plotRGB(Bande, r=4, g=3, b=2, stretch="Lin")
+pdf("Bande.pdf")
+par(mfrow=c(2,2))
+clB<- colorRampPalette(c("black","blue","light blue","light grey")) (200)
+clV<- colorRampPalette(c("black","green","light green","light grey")) (200)
+clR<- colorRampPalette(c("black","red","coral","yellow")) (200)
+clNIR<- colorRampPalette(c("black","cyan","hotpink")) (200)
+plot(Bande$SR_B2, col=clB, main="Banda del blu")
+plot(Bande$SR_B3, col=clV,  main="Banda del verde")
+plot(Bande$SR_B4, col=clR,  main="Banda del rosso")
+plot(Bande$SR_B5, col=clNIR, main="Banda del vicino-infrarosso")
+q()
+
+
 
