@@ -95,7 +95,6 @@ grid.arrange(p1, nrow=1)
 
 ####################################################################################################################################################
 
-
 banda_1 <-raster("SR_B1.TIF")
 banda_2 <-raster("SR_B2.TIF")
 banda_3 <-raster("SR_B3.TIF")
@@ -106,11 +105,9 @@ banda_7 <-raster("SR_B7.TIF")
 rlist <- list.files(pattern="SR_B")
 import <- lapply(rlist,raster)
 Bande <- stack(import)
-pdf(Tutte_le_bande)
-plot(Bande, main="bande della zona analizzata in precedenza")
-q()
+plot(Bande, main=" bande della zona analizzata in precedenza")
+plotRGB(Bande, r=3, g=2, b=1, stretch="Lin")
 plotRGB(Bande, r=4, g=3, b=2, stretch="Lin")
-pdf("Bande.pdf")
 par(mfrow=c(2,2))
 clB<- colorRampPalette(c("black","blue","light blue","light grey")) (200)
 clV<- colorRampPalette(c("black","green","light green","light grey")) (200)
@@ -120,10 +117,17 @@ plot(Bande$SR_B2, col=clB, main="Banda del blu")
 plot(Bande$SR_B3, col=clV,  main="Banda del verde")
 plot(Bande$SR_B4, col=clR,  main="Banda del rosso")
 plot(Bande$SR_B5, col=clNIR, main="Banda del vicino-infrarosso")
-q()
 
 ########################################################################################################################################################
-   
+   #crop per vedere un focus in rgb della zona affetta da inondazione
+extension <- c(676000,725000 , 5660000, 5700000)
+bandecut<- crop(Bande, extension)
+plotRGB(bandecut, r=4, g=3, b=2, stretch="Lin")
+
+##################################################################################################################################
+
+
+
 #calcolo dvi
 dvi <- Bande$SR_B5- Bande$SR_B4
 cldvi <- colorRampPalette(c('darkblue','yellow','red','black'))(100)
@@ -311,6 +315,24 @@ plot(Bande$SR_B3, col=clV,  main="Banda del verde")
 plot(Bande$SR_B4, col=clR,  main="Banda del rosso")
 plot(Bande$SR_B5, col=clNIR, main="Banda del vicino-infrarosso")
 q()
-
-
-
+ extension <- c(54728,60148,510555, 511232)
+bandecut<- crop(banda_1, extension)
+ plot(lakecut, col=cl, main="focus alte latitudini", zlim= c(276,290))
+extent     : 527685, 761715, 5609985, 5847015  (xmin, xmax, ymin, ymax)
+extension <- c(527686, 7611714, 5069986, 5847014)
+setwd("C:/lab/greenland/")
+banda_1 <-raster("B1.TIF")
+banda_2 <-raster("B2.TIF")
+banda_3 <-raster("B3.TIF")
+banda_4 <-raster("B4.TIF")
+banda_5 <-raster("B5.TIF")
+banda_6 <-raster("B6.TIF")
+banda_7 <-raster("B7.TIF")
+extent     : 215685, 457515, 5606685, 5851515  (xmin, xmax, ymin, ymax)
+ extension <- c(670000,730000,5750000, 5755000)
+ extension <- c(670000,725000 , 5620000, 5700000) #queste x vanno beneeeee
+bandecut<- crop(Bande, extension)
+extension <- c(676000,725000 , 5660000, 5700000) #UFFICIALEEEE
+plotRGB(bandecut, r=4, g=3, b=2, stretch="Lin")
+527685, 761715, 5609985, 5847015 
+extent     : 215685, 457515, 5606685, 5851515  (xmin, xmax, ymin, ymax)
