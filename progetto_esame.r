@@ -165,7 +165,7 @@ ndvi <- dvi / (Bande$SR_B5+ Bande$SR_B4)
 clndvi <- colorRampPalette(c('grey','lightgreen','darkgreen'))(50)
 plot(ndvi, col=clndvi,main="Calcolo NDVI (DVI normalizzato)")
 
-#######################################################################################################################################################
+######################################################################################################################################################c
 
  #SB: mi mostra la correlazione tra tutte le bande e anche il valore di Pearson
 banderes <- aggregate(Bande, fact=10) 
@@ -180,4 +180,7 @@ plot(vi, col=clvi, title="calcolo dei diversi vegetation index")
 
 #############################################################################################################
 
-    
+library(rasterVis)
+clvi <- colorRampPalette(c("goldenrod", "orange2","mediumorchid","palevioletred4" ,"coral", "darkred")) (1000)
+levelplot(Bande,col.regions=clvi, main="Bande dell'immagine Landsat", names.attr=c("Banda1","Banda2", "Banda3", "Banda4", "Banda5", "Banda6", "Banda7"), zlim=c(0, 40000))
+
