@@ -171,10 +171,11 @@ plot(ndvi, col=clndvi,main="Calcolo NDVI (DVI normalizzato)")
 ######################################################################################################################################################c
 
  #SB: mi mostra la correlazione tra tutte le bande e anche il valore di Pearson
-banderes <- aggregate(Bande, fact=10) 
+banderes  aggregate(Bande, fact=10) 
 banderes 
 plotRGB(banderes, r=4, g=3, b=2, stretch="Lin") 
 pairs(banderes)
+
 
 vi<- spectralIndices(banderes, green = 3, red = 4, nir = 5) 
 clvi <- colorRampPalette(c('cyan', 'purple', 'red')) (300)
