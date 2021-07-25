@@ -3,14 +3,17 @@ setwd("C:/lab/esame/")
 library(raster)
 library(ncdf4)
 library(rgdal)
+library(rasterVis)
 library(RStoolbox)
 library(ggplot2)
 library(gridExtra)
 pre<- brick("prima.jpg")
 post<- brick("dopo.jpg")
 par(mfrow=c(2,1))
-plotRGB(pre, main="situazione pre inondazione")
-plotRGB(post, main="situazione post inondazione")
+plotRGB(pre)
+plotRGB(post)
+
+
 par(mfrow=c(3,2))
 plot(pre$prima.1)
 plot(pre$prima.2)
@@ -181,6 +184,19 @@ plot(vi, col=clvi, title="calcolo dei diversi vegetation index")
 #############################################################################################################
 
 library(rasterVis)
-clvi <- colorRampPalette(c("goldenrod", "orange2","mediumorchid","palevioletred4" ,"coral", "darkred")) (1000)
-levelplot(Bande,col.regions=clvi, main="Bande dell'immagine Landsat", names.attr=c("Banda1","Banda2", "Banda3", "Banda4", "Banda5", "Banda6", "Banda7"), zlim=c(0, 40000))
+cllp <- colorRampPalette(c("yellow", "goldenrod", "orangered","mediumorchid","palevioletred4" ,"coral", "darkred")) (1000)
+levelplot(Bande,col.regions=cllp, main="Bande dell'immagine Landsat", names.attr=c("Banda1","Banda2", "Banda3", "Banda4", "Banda5", "Banda6", "Banda7"))
+
+banderesres_pca <- rasterPCA(banderes)
+summary(banderesres_pca$model)
+Importance of components:
+#                             Comp.1       Comp.2       Comp.3       Comp.4
+#Standard deviation     5810.8960397 2452.0487947 1.078454e+03 3.909446e+02
+#Proportion of Variance    0.8195438    0.1459299 2.822861e-02 3.709509e-03
+#Cumulative Proportion     0.8195438    0.9654736 9.937022e-01 9.974117e-01
+#                             Comp.5       Comp.6       Comp.7
+#Standard deviation     3.035012e+02 1.125988e+02 4.299972e+01
+#Proportion of Variance 2.235666e-03 3.077183e-04 4.487631e-05
+#Cumulative Proportion  9.996474e-01 9.999551e-01 1.000000e+00
+plotRGB(banderesres_pca$map,r=4, g=3, b=2, stretch="lin")
 
